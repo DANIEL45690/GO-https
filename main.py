@@ -11,59 +11,66 @@ from typing import Optional, Dict, Any, List, Tuple
 
 try:
     import requests
+
     REQUESTS_AVAILABLE = True
 except ImportError:
     REQUESTS_AVAILABLE = False
-    print("\033[93m[!] requests library not installed. Run: pip install requests\033[0m")
+    print(
+        "\033[93m[!] requests library not installed. Run: pip install requests\033[0m"
+    )
     sys.exit(1)
 
+
 class Colors:
-    RESET = '\033[0m'
-    BOLD = '\033[1m'
-    DIM = '\033[2m'
-    ITALIC = '\033[3m'
-    UNDERLINE = '\033[4m'
-    BLINK = '\033[5m'
+    RESET = "\033[0m"
+    BOLD = "\033[1m"
+    DIM = "\033[2m"
+    ITALIC = "\033[3m"
+    UNDERLINE = "\033[4m"
+    BLINK = "\033[5m"
 
     class FG:
-        BLACK = '\033[30m'
-        RED = '\033[31m'
-        GREEN = '\033[32m'
-        YELLOW = '\033[33m'
-        BLUE = '\033[34m'
-        MAGENTA = '\033[35m'
-        CYAN = '\033[36m'
-        WHITE = '\033[37m'
-        BRIGHT_BLACK = '\033[90m'
-        BRIGHT_RED = '\033[91m'
-        BRIGHT_GREEN = '\033[92m'
-        BRIGHT_YELLOW = '\033[93m'
-        BRIGHT_BLUE = '\033[94m'
-        BRIGHT_MAGENTA = '\033[95m'
-        BRIGHT_CYAN = '\033[96m'
-        BRIGHT_WHITE = '\033[97m'
+        BLACK = "\033[30m"
+        RED = "\033[31m"
+        GREEN = "\033[32m"
+        YELLOW = "\033[33m"
+        BLUE = "\033[34m"
+        MAGENTA = "\033[35m"
+        CYAN = "\033[36m"
+        WHITE = "\033[37m"
+        BRIGHT_BLACK = "\033[90m"
+        BRIGHT_RED = "\033[91m"
+        BRIGHT_GREEN = "\033[92m"
+        BRIGHT_YELLOW = "\033[93m"
+        BRIGHT_BLUE = "\033[94m"
+        BRIGHT_MAGENTA = "\033[95m"
+        BRIGHT_CYAN = "\033[96m"
+        BRIGHT_WHITE = "\033[97m"
 
     class BG:
-        BLACK = '\033[40m'
-        RED = '\033[41m'
-        GREEN = '\033[42m'
-        YELLOW = '\033[43m'
-        BLUE = '\033[44m'
-        MAGENTA = '\033[45m'
-        CYAN = '\033[46m'
-        WHITE = '\033[47m'
-        BRIGHT_BLACK = '\033[100m'
-        BRIGHT_RED = '\033[101m'
-        BRIGHT_GREEN = '\033[102m'
-        BRIGHT_YELLOW = '\033[103m'
-        BRIGHT_BLUE = '\033[104m'
-        BRIGHT_MAGENTA = '\033[105m'
-        BRIGHT_CYAN = '\033[106m'
-        BRIGHT_WHITE = '\033[107m'
+        BLACK = "\033[40m"
+        RED = "\033[41m"
+        GREEN = "\033[42m"
+        YELLOW = "\033[43m"
+        BLUE = "\033[44m"
+        MAGENTA = "\033[45m"
+        CYAN = "\033[46m"
+        WHITE = "\033[47m"
+        BRIGHT_BLACK = "\033[100m"
+        BRIGHT_RED = "\033[101m"
+        BRIGHT_GREEN = "\033[102m"
+        BRIGHT_YELLOW = "\033[103m"
+        BRIGHT_BLUE = "\033[104m"
+        BRIGHT_MAGENTA = "\033[105m"
+        BRIGHT_CYAN = "\033[106m"
+        BRIGHT_WHITE = "\033[107m"
+
 
 class Gradient:
     @staticmethod
-    def linear(text: str, start_rgb: Tuple[int,int,int], end_rgb: Tuple[int,int,int]) -> str:
+    def linear(
+        text: str, start_rgb: Tuple[int, int, int], end_rgb: Tuple[int, int, int]
+    ) -> str:
         result = []
         length = len(text)
         for i, char in enumerate(text):
@@ -71,9 +78,9 @@ class Gradient:
             r = int(start_rgb[0] + (end_rgb[0] - start_rgb[0]) * ratio)
             g = int(start_rgb[1] + (end_rgb[1] - start_rgb[1]) * ratio)
             b = int(start_rgb[2] + (end_rgb[2] - start_rgb[2]) * ratio)
-            result.append(f'\033[38;2;{r};{g};{b}m{char}')
+            result.append(f"\033[38;2;{r};{g};{b}m{char}")
         result.append(Colors.RESET)
-        return ''.join(result)
+        return "".join(result)
 
     @staticmethod
     def rainbow(text: str) -> str:
@@ -81,76 +88,103 @@ class Gradient:
         for i, char in enumerate(text):
             hue = (i * 5) % 360
             r, g, b = Gradient._hsv_to_rgb(hue, 1.0, 1.0)
-            result.append(f'\033[38;2;{r};{g};{b}m{char}')
+            result.append(f"\033[38;2;{r};{g};{b}m{char}")
         result.append(Colors.RESET)
-        return ''.join(result)
+        return "".join(result)
 
     @staticmethod
     def fire(text: str) -> str:
-        colors = [(255,0,0), (255,69,0), (255,140,0), (255,165,0), (255,215,0)]
+        colors = [
+            (255, 0, 0),
+            (255, 69, 0),
+            (255, 140, 0),
+            (255, 165, 0),
+            (255, 215, 0),
+        ]
         return Gradient._horizontal(text, colors)
 
     @staticmethod
     def ice(text: str) -> str:
-        colors = [(0,255,255), (0,191,255), (30,144,255), (70,130,180), (100,149,237)]
+        colors = [
+            (0, 255, 255),
+            (0, 191, 255),
+            (30, 144, 255),
+            (70, 130, 180),
+            (100, 149, 237),
+        ]
         return Gradient._horizontal(text, colors)
 
     @staticmethod
     def neon(text: str) -> str:
-        colors = [(57,255,20), (0,255,127), (0,255,255), (127,255,0), (50,205,50)]
+        colors = [
+            (57, 255, 20),
+            (0, 255, 127),
+            (0, 255, 255),
+            (127, 255, 0),
+            (50, 205, 50),
+        ]
         return Gradient._horizontal(text, colors)
 
     @staticmethod
     def sunset(text: str) -> str:
-        colors = [(255,94,77), (255,121,63), (255,160,0), (255,190,11), (238,210,2)]
+        colors = [
+            (255, 94, 77),
+            (255, 121, 63),
+            (255, 160, 0),
+            (255, 190, 11),
+            (238, 210, 2),
+        ]
         return Gradient._horizontal(text, colors)
 
     @staticmethod
-    def _horizontal(text: str, colors: List[Tuple[int,int,int]]) -> str:
+    def _horizontal(text: str, colors: List[Tuple[int, int, int]]) -> str:
         result = []
         length = len(text)
         segments = len(colors)
         for i, char in enumerate(text):
             idx = int((i / length) * (segments - 1)) if length > 0 else 0
-            r,g,b = colors[idx]
-            result.append(f'\033[38;2;{r};{g};{b}m{char}')
+            r, g, b = colors[idx]
+            result.append(f"\033[38;2;{r};{g};{b}m{char}")
         result.append(Colors.RESET)
-        return ''.join(result)
+        return "".join(result)
 
     @staticmethod
-    def _hsv_to_rgb(h: int, s: float, v: float) -> Tuple[int,int,int]:
+    def _hsv_to_rgb(h: int, s: float, v: float) -> Tuple[int, int, int]:
         h = h % 360
         c = v * s
         x = c * (1 - abs((h / 60) % 2 - 1))
         m = v - c
 
         if 0 <= h < 60:
-            r,g,b = c,x,0
+            r, g, b = c, x, 0
         elif 60 <= h < 120:
-            r,g,b = x,c,0
+            r, g, b = x, c, 0
         elif 120 <= h < 180:
-            r,g,b = 0,c,x
+            r, g, b = 0, c, x
         elif 180 <= h < 240:
-            r,g,b = 0,x,c
+            r, g, b = 0, x, c
         elif 240 <= h < 300:
-            r,g,b = x,0,c
+            r, g, b = x, 0, c
         else:
-            r,g,b = c,0,x
+            r, g, b = c, 0, x
 
-        return int((r+m)*255), int((g+m)*255), int((b+m)*255)
+        return int((r + m) * 255), int((g + m) * 255), int((b + m) * 255)
+
 
 class Animation:
     @staticmethod
     def spinner(duration: float = 1.0, message: str = "Processing"):
-        frames = ['◐', '◓', '◑', '◒']
+        frames = ["◐", "◓", "◑", "◒"]
         start = time.time()
         i = 0
         while time.time() - start < duration:
-            sys.stdout.write(f'\r{Gradient.neon(frames[i % len(frames)])} {Gradient.linear(message, (0,255,255), (255,0,255))}')
+            sys.stdout.write(
+                f"\r{Gradient.neon(frames[i % len(frames)])} {Gradient.linear(message, (0,255,255), (255,0,255))}"
+            )
             sys.stdout.flush()
             time.sleep(0.08)
             i += 1
-        sys.stdout.write('\r' + ' ' * (len(message) + 10) + '\r')
+        sys.stdout.write("\r" + " " * (len(message) + 10) + "\r")
 
     @staticmethod
     def progress_bar(total: int = 100, duration: float = 1.5, title: str = "Progress"):
@@ -158,14 +192,16 @@ class Animation:
         for i in range(total + 1):
             percent = i / total
             filled = int(bar_length * percent)
-            bar = '█' * filled + '░' * (bar_length - filled)
+            bar = "█" * filled + "░" * (bar_length - filled)
             if percent < 0.33:
-                grad_bar = Gradient.linear(bar, (255,0,0), (255,165,0))
+                grad_bar = Gradient.linear(bar, (255, 0, 0), (255, 165, 0))
             elif percent < 0.66:
-                grad_bar = Gradient.linear(bar, (255,165,0), (255,255,0))
+                grad_bar = Gradient.linear(bar, (255, 165, 0), (255, 255, 0))
             else:
-                grad_bar = Gradient.linear(bar, (255,255,0), (0,255,0))
-            sys.stdout.write(f'\r{Gradient.linear(title, (0,255,255), (255,255,0))} : {grad_bar} {i:3d}%')
+                grad_bar = Gradient.linear(bar, (255, 255, 0), (0, 255, 0))
+            sys.stdout.write(
+                f"\r{Gradient.linear(title, (0,255,255), (255,255,0))} : {grad_bar} {i:3d}%"
+            )
             sys.stdout.flush()
             time.sleep(duration / total)
         print()
@@ -177,6 +213,7 @@ class Animation:
             sys.stdout.flush()
             time.sleep(delay)
         print()
+
 
 class Banner:
     @staticmethod
@@ -192,10 +229,10 @@ class Banner:
   ████████▀   ▀██████▀        ▀████████▀   ███    █▀   ▄████▀        ███    ███  ▀██████▀   ▄████████▀
                                                                      ███    ███
         """
-        lines = banner.split('\n')
+        lines = banner.split("\n")
         for line in lines:
             if line.strip():
-                grad = Gradient.linear(line, (0,255,255), (255,0,255))
+                grad = Gradient.linear(line, (0, 255, 255), (255, 0, 255))
                 print(grad)
             time.sleep(0.01)
 
@@ -209,90 +246,112 @@ class Banner:
 ║  Status: Active                  Library: requests               ║
 ╚══════════════════════════════════════════════════════════════════╝
         """
-        for line in banner.split('\n'):
+        for line in banner.split("\n"):
             if line.strip():
                 print(Gradient.neon(line))
             time.sleep(0.005)
 
+
 class GoStyleHTTP:
     def __init__(self):
         self.session = requests.Session()
-        self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
-            'Accept': '*/*',
-        })
+        self.session.headers.update(
+            {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+                "Accept": "*/*",
+            }
+        )
         self.timeout = 30
 
     def get(self, url: str, params: Dict = None) -> Dict:
         try:
             resp = self.session.get(url, params=params, timeout=self.timeout)
             return {
-                'status': resp.status_code,
-                'headers': dict(resp.headers),
-                'body': resp.text[:500] + "..." if len(resp.text) > 500 else resp.text,
-                'json': resp.json() if 'application/json' in resp.headers.get('Content-Type', '') else None,
-                'time': resp.elapsed.total_seconds(),
-                'url': resp.url
+                "status": resp.status_code,
+                "headers": dict(resp.headers),
+                "body": resp.text[:500] + "..." if len(resp.text) > 500 else resp.text,
+                "json": (
+                    resp.json()
+                    if "application/json" in resp.headers.get("Content-Type", "")
+                    else None
+                ),
+                "time": resp.elapsed.total_seconds(),
+                "url": resp.url,
             }
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def post(self, url: str, data: Dict = None, json_data: Dict = None) -> Dict:
         try:
-            resp = self.session.post(url, data=data, json=json_data, timeout=self.timeout)
-            return {'status': resp.status_code, 'body': resp.text[:500], 'json': resp.json() if resp.text else None, 'time': resp.elapsed.total_seconds()}
+            resp = self.session.post(
+                url, data=data, json=json_data, timeout=self.timeout
+            )
+            return {
+                "status": resp.status_code,
+                "body": resp.text[:500],
+                "json": resp.json() if resp.text else None,
+                "time": resp.elapsed.total_seconds(),
+            }
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def put(self, url: str, json_data: Dict = None) -> Dict:
         try:
             resp = self.session.put(url, json=json_data, timeout=self.timeout)
-            return {'status': resp.status_code, 'body': resp.text[:300], 'time': resp.elapsed.total_seconds()}
+            return {
+                "status": resp.status_code,
+                "body": resp.text[:300],
+                "time": resp.elapsed.total_seconds(),
+            }
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def delete(self, url: str) -> Dict:
         try:
             resp = self.session.delete(url, timeout=self.timeout)
-            return {'status': resp.status_code, 'body': resp.text[:300]}
+            return {"status": resp.status_code, "body": resp.text[:300]}
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def patch(self, url: str, json_data: Dict = None) -> Dict:
         try:
             resp = self.session.patch(url, json=json_data, timeout=self.timeout)
-            return {'status': resp.status_code, 'body': resp.text[:300]}
+            return {"status": resp.status_code, "body": resp.text[:300]}
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def head(self, url: str) -> Dict:
         try:
             resp = self.session.head(url, timeout=self.timeout)
-            return {'status': resp.status_code, 'headers': dict(resp.headers)}
+            return {"status": resp.status_code, "headers": dict(resp.headers)}
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def options(self, url: str) -> Dict:
         try:
             resp = self.session.options(url, timeout=self.timeout)
-            return {'status': resp.status_code, 'allow': resp.headers.get('Allow', '')}
+            return {"status": resp.status_code, "allow": resp.headers.get("Allow", "")}
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def download(self, url: str, filename: str) -> bool:
         try:
             resp = self.session.get(url, stream=True)
-            total = int(resp.headers.get('content-length', 0))
+            total = int(resp.headers.get("content-length", 0))
             downloaded = 0
-            with open(filename, 'wb') as f:
+            with open(filename, "wb") as f:
                 for chunk in resp.iter_content(chunk_size=8192):
                     if chunk:
                         f.write(chunk)
                         downloaded += len(chunk)
                         if total > 0:
                             percent = (downloaded / total) * 100
-                            bar = '█' * int(percent // 2) + '░' * (50 - int(percent // 2))
-                            sys.stdout.write(f'\r{Gradient.linear(f"Download: {bar}", (0,255,0), (255,215,0))} {percent:.1f}%')
+                            bar = "█" * int(percent // 2) + "░" * (
+                                50 - int(percent // 2)
+                            )
+                            sys.stdout.write(
+                                f'\r{Gradient.linear(f"Download: {bar}", (0,255,0), (255,215,0))} {percent:.1f}%'
+                            )
                             sys.stdout.flush()
             print()
             return True
@@ -302,12 +361,12 @@ class GoStyleHTTP:
 
     def upload(self, url: str, filepath: str) -> Dict:
         try:
-            with open(filepath, 'rb') as f:
-                files = {'file': (os.path.basename(filepath), f)}
+            with open(filepath, "rb") as f:
+                files = {"file": (os.path.basename(filepath), f)}
                 resp = self.session.post(url, files=files)
-                return {'status': resp.status_code, 'body': resp.text[:300]}
+                return {"status": resp.status_code, "body": resp.text[:300]}
         except Exception as e:
-            return {'error': str(e)}
+            return {"error": str(e)}
 
     def batch_get(self, urls: List[str]) -> List[Dict]:
         results = []
@@ -317,6 +376,7 @@ class GoStyleHTTP:
 
     def parallel_get(self, urls: List[str], workers: int = 5) -> List[Dict]:
         from concurrent.futures import ThreadPoolExecutor
+
         results = []
         with ThreadPoolExecutor(max_workers=workers) as executor:
             futures = [executor.submit(self.get, url) for url in urls]
@@ -334,37 +394,37 @@ class GoStyleHTTP:
     def get_size(self, url: str) -> int:
         try:
             resp = self.session.head(url, timeout=5)
-            return int(resp.headers.get('content-length', 0))
+            return int(resp.headers.get("content-length", 0))
         except:
             return 0
 
     def get_content_type(self, url: str) -> str:
         try:
             resp = self.session.head(url, timeout=5)
-            return resp.headers.get('content-type', 'unknown')
+            return resp.headers.get("content-type", "unknown")
         except:
-            return 'unknown'
+            return "unknown"
 
     def get_server(self, url: str) -> str:
         try:
             resp = self.session.head(url, timeout=5)
-            return resp.headers.get('server', 'unknown')
+            return resp.headers.get("server", "unknown")
         except:
-            return 'unknown'
+            return "unknown"
 
     def get_last_modified(self, url: str) -> str:
         try:
             resp = self.session.head(url, timeout=5)
-            return resp.headers.get('last-modified', 'unknown')
+            return resp.headers.get("last-modified", "unknown")
         except:
-            return 'unknown'
+            return "unknown"
 
     def get_ip(self, url: str) -> str:
         try:
-            host = url.replace('http://', '').replace('https://', '').split('/')[0]
+            host = url.replace("http://", "").replace("https://", "").split("/")[0]
             return socket.gethostbyname(host)
         except:
-            return 'unknown'
+            return "unknown"
 
     def get_redirects(self, url: str, max_follow: int = 10) -> List[str]:
         redirects = []
@@ -373,7 +433,7 @@ class GoStyleHTTP:
             try:
                 resp = self.session.get(current, allow_redirects=False)
                 if resp.status_code in [301, 302, 303, 307, 308]:
-                    next_url = resp.headers.get('Location', '')
+                    next_url = resp.headers.get("Location", "")
                     if next_url:
                         redirects.append(next_url)
                         current = next_url
@@ -405,7 +465,7 @@ class GoStyleHTTP:
         self.timeout = seconds
 
     def set_proxy(self, proxy_url: str):
-        self.session.proxies = {'http': proxy_url, 'https': proxy_url}
+        self.session.proxies = {"http": proxy_url, "https": proxy_url}
 
     def remove_proxy(self):
         self.session.proxies = {}
@@ -425,20 +485,20 @@ class GoStyleHTTP:
         return re.findall(pattern, html)
 
     def extract_emails(self, text: str) -> List[str]:
-        pattern = r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b'
+        pattern = r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"
         return re.findall(pattern, text)
 
     def get_md5(self, url: str) -> str:
         result = self.get(url)
-        if 'body' in result:
-            return hashlib.md5(result['body'].encode()).hexdigest()
-        return ''
+        if "body" in result:
+            return hashlib.md5(result["body"].encode()).hexdigest()
+        return ""
 
     def get_sha256(self, url: str) -> str:
         result = self.get(url)
-        if 'body' in result:
-            return hashlib.sha256(result['body'].encode()).hexdigest()
-        return ''
+        if "body" in result:
+            return hashlib.sha256(result["body"].encode()).hexdigest()
+        return ""
 
     def base64_encode(self, text: str) -> str:
         return base64.b64encode(text.encode()).decode()
@@ -463,10 +523,14 @@ class GoStyleHTTP:
                 continue
             visited.add(url)
             result = self.get(url)
-            if 'body' in result:
-                links = self.extract_links(result['body'])
+            if "body" in result:
+                links = self.extract_links(result["body"])
                 for link in links:
-                    if link.startswith('http') and link not in visited and link not in to_visit:
+                    if (
+                        link.startswith("http")
+                        and link not in visited
+                        and link not in to_visit
+                    ):
                         to_visit.append(link)
                 found.append(url)
         return found
@@ -479,25 +543,25 @@ class GoStyleHTTP:
             start = time.time()
             result = self.get(url)
             elapsed = time.time() - start
-            if 'error' not in result:
+            if "error" not in result:
                 successes += 1
                 times.append(elapsed)
         return {
-            'min': min(times) if times else 0,
-            'max': max(times) if times else 0,
-            'avg': sum(times)/len(times) if times else 0,
-            'success_rate': (successes/count)*100,
-            'total': count,
-            'successful': successes
+            "min": min(times) if times else 0,
+            "max": max(times) if times else 0,
+            "avg": sum(times) / len(times) if times else 0,
+            "success_rate": (successes / count) * 100,
+            "total": count,
+            "successful": successes,
         }
 
     def compare(self, url1: str, url2: str) -> Dict:
         r1 = self.get(url1)
         r2 = self.get(url2)
         return {
-            'status_match': r1.get('status') == r2.get('status'),
-            'size_match': len(r1.get('body', '')) == len(r2.get('body', '')),
-            'time_diff': abs(r1.get('time', 0) - r2.get('time', 0))
+            "status_match": r1.get("status") == r2.get("status"),
+            "size_match": len(r1.get("body", "")) == len(r2.get("body", "")),
+            "time_diff": abs(r1.get("time", 0) - r2.get("time", 0)),
         }
 
     def monitor(self, url: str, interval: int = 5, duration: int = 30) -> List[Dict]:
@@ -509,10 +573,11 @@ class GoStyleHTTP:
                 break
             Animation.spinner(0.3, f"Monitor {i+1}/{total_checks}")
             result = self.get(url)
-            result['timestamp'] = datetime.now().isoformat()
+            result["timestamp"] = datetime.now().isoformat()
             results.append(result)
             time.sleep(interval)
         return results
+
 
 class Menu:
     def __init__(self):
@@ -520,47 +585,77 @@ class Menu:
         self.running = True
 
     def clear(self):
-        os.system('cls' if os.name == 'nt' else 'clear')
+        os.system("cls" if os.name == "nt" else "clear")
 
     def header(self):
         self.clear()
         Banner.show()
         print()
         print(Gradient.fire("=" * 70))
-        print(Gradient.rainbow("          GO-STYLE HTTP TOOLKIT - ENTERPRISE EDITION          "))
+        print(
+            Gradient.rainbow(
+                "          GO-STYLE HTTP TOOLKIT - ENTERPRISE EDITION          "
+            )
+        )
         print(Gradient.ice("=" * 70))
-        print(f"{Colors.FG.BRIGHT_CYAN}│{Colors.RESET} {Colors.BOLD}Author:{Colors.RESET} @console_hack          {Colors.FG.BRIGHT_GREEN}Status:{Colors.RESET} Active")
-        print(f"{Colors.FG.BRIGHT_CYAN}│{Colors.RESET} {Colors.BOLD}Version:{Colors.RESET} 2.0                  {Colors.FG.BRIGHT_YELLOW}Features:{Colors.RESET} 50+ Functions")
+        print(
+            f"{Colors.FG.BRIGHT_CYAN}│{Colors.RESET} {Colors.BOLD}Author:{Colors.RESET} @console_hack          {Colors.FG.BRIGHT_GREEN}Status:{Colors.RESET} Active"
+        )
+        print(
+            f"{Colors.FG.BRIGHT_CYAN}│{Colors.RESET} {Colors.BOLD}Version:{Colors.RESET} 2.0                  {Colors.FG.BRIGHT_YELLOW}Features:{Colors.RESET} 50+ Functions"
+        )
         print(Gradient.fire("=" * 70))
 
     def menu(self):
         items = [
-            ("1", "GET Request"), ("2", "POST Request"),
-            ("3", "PUT Request"), ("4", "DELETE Request"),
-            ("5", "PATCH Request"), ("6", "HEAD Request"),
-            ("7", "OPTIONS Request"), ("8", "Download File"),
-            ("9", "Upload File"), ("10", "Batch GET"),
-            ("11", "Parallel GET"), ("12", "Check Status"),
-            ("13", "Get Size"), ("14", "Content Type"),
-            ("15", "Server Info"), ("16", "Last Modified"),
-            ("17", "IP Lookup"), ("18", "Follow Redirects"),
-            ("19", "Set Cookie"), ("20", "Clear Cookies"),
-            ("21", "View Headers"), ("22", "Set Header"),
-            ("23", "Remove Header"), ("24", "Set Timeout"),
-            ("25", "Set Proxy"), ("26", "Remove Proxy"),
-            ("27", "Set Auth"), ("28", "Remove Auth"),
-            ("29", "Extract Links"), ("30", "Extract Images"),
-            ("31", "Extract Emails"), ("32", "Get MD5"),
-            ("33", "Get SHA256"), ("34", "Base64 Encode"),
-            ("35", "Base64 Decode"), ("36", "URL Encode"),
-            ("37", "URL Decode"), ("38", "Web Spider"),
-            ("39", "Benchmark"), ("40", "Compare URLs"),
-            ("41", "Monitor URL"), ("42", "System Info"),
-            ("43", "Clear Screen"), ("0", "Exit")
+            ("1", "GET Request"),
+            ("2", "POST Request"),
+            ("3", "PUT Request"),
+            ("4", "DELETE Request"),
+            ("5", "PATCH Request"),
+            ("6", "HEAD Request"),
+            ("7", "OPTIONS Request"),
+            ("8", "Download File"),
+            ("9", "Upload File"),
+            ("10", "Batch GET"),
+            ("11", "Parallel GET"),
+            ("12", "Check Status"),
+            ("13", "Get Size"),
+            ("14", "Content Type"),
+            ("15", "Server Info"),
+            ("16", "Last Modified"),
+            ("17", "IP Lookup"),
+            ("18", "Follow Redirects"),
+            ("19", "Set Cookie"),
+            ("20", "Clear Cookies"),
+            ("21", "View Headers"),
+            ("22", "Set Header"),
+            ("23", "Remove Header"),
+            ("24", "Set Timeout"),
+            ("25", "Set Proxy"),
+            ("26", "Remove Proxy"),
+            ("27", "Set Auth"),
+            ("28", "Remove Auth"),
+            ("29", "Extract Links"),
+            ("30", "Extract Images"),
+            ("31", "Extract Emails"),
+            ("32", "Get MD5"),
+            ("33", "Get SHA256"),
+            ("34", "Base64 Encode"),
+            ("35", "Base64 Decode"),
+            ("36", "URL Encode"),
+            ("37", "URL Decode"),
+            ("38", "Web Spider"),
+            ("39", "Benchmark"),
+            ("40", "Compare URLs"),
+            ("41", "Monitor URL"),
+            ("42", "System Info"),
+            ("43", "Clear Screen"),
+            ("0", "Exit"),
         ]
 
-        left = items[:len(items)//2]
-        right = items[len(items)//2:]
+        left = items[: len(items) // 2]
+        right = items[len(items) // 2 :]
 
         print(Gradient.neon("\n┌" + "─" * 68 + "┐"))
         for i in range(max(len(left), len(right))):
@@ -574,12 +669,14 @@ class Menu:
             left_padded = left_text.ljust(32)
             right_padded = right_text.ljust(32)
 
-            left_colored = Gradient.linear(left_padded, (0,255,255), (100,255,100))
+            left_colored = Gradient.linear(left_padded, (0, 255, 255), (100, 255, 100))
             right_colored = Gradient.ice(right_padded)
             print(f"│ {left_colored} {right_colored} │")
         print(Gradient.neon("└" + "─" * 68 + "┘"))
 
-        return input(f"\n{Colors.FG.BRIGHT_GREEN}┌─[{Colors.FG.BRIGHT_YELLOW}@console_hack{Colors.FG.BRIGHT_GREEN}]\n└─$ {Colors.RESET}")
+        return input(
+            f"\n{Colors.FG.BRIGHT_GREEN}┌─[{Colors.FG.BRIGHT_YELLOW}@console_hack{Colors.FG.BRIGHT_GREEN}]\n└─$ {Colors.RESET}"
+        )
 
     def result(self, data: Dict):
         print(Gradient.sunset("\n┌" + "─" * 68 + "┐"))
@@ -594,7 +691,9 @@ class Menu:
                 print(f"│ {Colors.FG.BRIGHT_CYAN}{key}:{Colors.RESET} {val_str:<60} │")
                 i += 1
         print(Gradient.sunset("└" + "─" * 68 + "┘"))
-        input(f"\n{Colors.FG.BRIGHT_MAGENTA}[!] Press Enter to continue...{Colors.RESET}")
+        input(
+            f"\n{Colors.FG.BRIGHT_MAGENTA}[!] Press Enter to continue...{Colors.RESET}"
+        )
 
     def run_get(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
@@ -604,18 +703,22 @@ class Menu:
 
     def run_post(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
-        choice = input(f"{Colors.FG.BRIGHT_CYAN}[?] JSON or FORM? (j/f): {Colors.RESET}").lower()
-        if choice == 'j':
+        choice = input(
+            f"{Colors.FG.BRIGHT_CYAN}[?] JSON or FORM? (j/f): {Colors.RESET}"
+        ).lower()
+        if choice == "j":
             json_str = input(f"{Colors.FG.BRIGHT_CYAN}[?] JSON data: {Colors.RESET}")
             json_data = json.loads(json_str) if json_str else {}
             res = self.http.post(url, json_data=json_data)
         else:
-            data_str = input(f"{Colors.FG.BRIGHT_CYAN}[?] Form data (key=value, comma): {Colors.RESET}")
+            data_str = input(
+                f"{Colors.FG.BRIGHT_CYAN}[?] Form data (key=value, comma): {Colors.RESET}"
+            )
             data = {}
             if data_str:
-                for pair in data_str.split(','):
-                    if '=' in pair:
-                        k,v = pair.split('=',1)
+                for pair in data_str.split(","):
+                    if "=" in pair:
+                        k, v = pair.split("=", 1)
                         data[k.strip()] = v.strip()
             res = self.http.post(url, data=data)
         self.result(res)
@@ -681,7 +784,7 @@ class Menu:
         Animation.progress_bar(100, 1.5, "Batch Processing")
         results = self.http.batch_get(urls)
         for i, res in enumerate(results):
-            status = res.get('status', 'error')
+            status = res.get("status", "error")
             color = Colors.FG.BRIGHT_GREEN if status == 200 else Colors.FG.BRIGHT_RED
             print(f"{color}{urls[i]}: {status}{Colors.RESET}")
         input(f"\nPress Enter...")
@@ -694,27 +797,35 @@ class Menu:
             if not url:
                 break
             urls.append(url)
-        workers = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Workers (1-10): {Colors.RESET}") or "5")
+        workers = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Workers (1-10): {Colors.RESET}") or "5"
+        )
         workers = min(10, max(1, workers))
         Animation.spinner(1.0, "Parallel requests")
         results = self.http.parallel_get(urls, workers)
         for i, res in enumerate(results):
-            status = res.get('status', 'error')
+            status = res.get("status", "error")
             color = Colors.FG.BRIGHT_GREEN if status == 200 else Colors.FG.BRIGHT_RED
-            print(f"{color}{urls[i]}: {status} ({res.get('time', 0):.2f}s){Colors.RESET}")
+            print(
+                f"{color}{urls[i]}: {status} ({res.get('time', 0):.2f}s){Colors.RESET}"
+            )
         input(f"\nPress Enter...")
 
     def run_status(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
         status = self.http.check_status(url)
-        color = Colors.FG.BRIGHT_GREEN if status == 200 else Colors.FG.BRIGHT_RED if status > 0 else Colors.FG.BRIGHT_YELLOW
+        color = (
+            Colors.FG.BRIGHT_GREEN
+            if status == 200
+            else Colors.FG.BRIGHT_RED if status > 0 else Colors.FG.BRIGHT_YELLOW
+        )
         print(f"{color}Status: {status}{Colors.RESET}")
         input(f"\nPress Enter...")
 
     def run_size(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
         size = self.http.get_size(url)
-        if size > 1024*1024:
+        if size > 1024 * 1024:
             size_str = f"{size/(1024*1024):.2f} MB"
         elif size > 1024:
             size_str = f"{size/1024:.2f} KB"
@@ -749,7 +860,9 @@ class Menu:
 
     def run_redirects(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
-        max_follow = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Max follows: {Colors.RESET}") or "10")
+        max_follow = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Max follows: {Colors.RESET}") or "10"
+        )
         redirects = self.http.get_redirects(url, max_follow)
         if redirects:
             print(Gradient.rainbow("\nRedirect Chain:"))
@@ -774,7 +887,7 @@ class Menu:
     def run_view_headers(self):
         headers = self.http.get_headers()
         print(Gradient.neon("\nCurrent Headers:"))
-        for k,v in headers.items():
+        for k, v in headers.items():
             print(f"{Colors.FG.BRIGHT_CYAN}{k}:{Colors.RESET} {v}")
         input(f"\nPress Enter...")
 
@@ -792,13 +905,17 @@ class Menu:
         input(f"\nPress Enter...")
 
     def run_set_timeout(self):
-        timeout = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Timeout seconds: {Colors.RESET}"))
+        timeout = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Timeout seconds: {Colors.RESET}")
+        )
         self.http.set_timeout(timeout)
         print(f"{Colors.FG.BRIGHT_GREEN}✓ Timeout set to {timeout}s{Colors.RESET}")
         input(f"\nPress Enter...")
 
     def run_set_proxy(self):
-        proxy = input(f"{Colors.FG.BRIGHT_CYAN}[?] Proxy URL (http://ip:port): {Colors.RESET}")
+        proxy = input(
+            f"{Colors.FG.BRIGHT_CYAN}[?] Proxy URL (http://ip:port): {Colors.RESET}"
+        )
         self.http.set_proxy(proxy)
         print(f"{Colors.FG.BRIGHT_GREEN}✓ Proxy set{Colors.RESET}")
         input(f"\nPress Enter...")
@@ -823,8 +940,8 @@ class Menu:
     def run_extract_links(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
         res = self.http.get(url)
-        if 'body' in res:
-            links = self.http.extract_links(res['body'])
+        if "body" in res:
+            links = self.http.extract_links(res["body"])
             print(Gradient.rainbow(f"\nFound {len(links)} links:"))
             for link in links[:30]:
                 print(f"{Colors.FG.BRIGHT_CYAN}→{Colors.RESET} {link}")
@@ -833,8 +950,8 @@ class Menu:
     def run_extract_images(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
         res = self.http.get(url)
-        if 'body' in res:
-            images = self.http.extract_images(res['body'])
+        if "body" in res:
+            images = self.http.extract_images(res["body"])
             print(Gradient.rainbow(f"\nFound {len(images)} images:"))
             for img in images[:30]:
                 print(f"{Colors.FG.BRIGHT_MAGENTA}🖼️{Colors.RESET} {img}")
@@ -843,8 +960,8 @@ class Menu:
     def run_extract_emails(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
         res = self.http.get(url)
-        if 'body' in res:
-            emails = self.http.extract_emails(res['body'])
+        if "body" in res:
+            emails = self.http.extract_emails(res["body"])
             print(Gradient.rainbow(f"\nFound {len(emails)} emails:"))
             for email in emails:
                 print(f"{Colors.FG.BRIGHT_GREEN}✉️{Colors.RESET} {email}")
@@ -893,7 +1010,9 @@ class Menu:
 
     def run_spider(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] Start URL: {Colors.RESET}")
-        max_pages = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Max pages: {Colors.RESET}") or "20")
+        max_pages = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Max pages: {Colors.RESET}") or "20"
+        )
         Animation.progress_bar(100, 2.0, "Spider crawling")
         found = self.http.spider(url, max_pages)
         print(Gradient.rainbow(f"\nDiscovered {len(found)} pages:"))
@@ -903,7 +1022,9 @@ class Menu:
 
     def run_benchmark(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL: {Colors.RESET}")
-        count = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Requests count: {Colors.RESET}") or "20")
+        count = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Requests count: {Colors.RESET}") or "20"
+        )
         count = min(100, max(1, count))
         print(Gradient.neon("\nRunning benchmark..."))
         result = self.http.benchmark(url, count)
@@ -918,20 +1039,28 @@ class Menu:
 
     def run_monitor(self):
         url = input(f"{Colors.FG.BRIGHT_CYAN}[?] URL to monitor: {Colors.RESET}")
-        interval = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Interval (sec): {Colors.RESET}") or "5")
-        duration = int(input(f"{Colors.FG.BRIGHT_CYAN}[?] Duration (sec): {Colors.RESET}") or "30")
+        interval = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Interval (sec): {Colors.RESET}") or "5"
+        )
+        duration = int(
+            input(f"{Colors.FG.BRIGHT_CYAN}[?] Duration (sec): {Colors.RESET}") or "30"
+        )
         results = self.http.monitor(url, interval, duration)
         print(Gradient.rainbow(f"\nMonitor Results ({len(results)} samples):"))
         for res in results:
-            status = res.get('status', 'error')
+            status = res.get("status", "error")
             color = Colors.FG.BRIGHT_GREEN if status == 200 else Colors.FG.BRIGHT_RED
-            print(f"{res.get('timestamp')} - {color}Status: {status} ({res.get('time', 0):.2f}s){Colors.RESET}")
+            print(
+                f"{res.get('timestamp')} - {color}Status: {status} ({res.get('time', 0):.2f}s){Colors.RESET}"
+            )
         input(f"\nPress Enter...")
 
     def run_info(self):
         print(Gradient.ice("\n" + "═" * 60))
         print(f"{Colors.BOLD}System Information:{Colors.RESET}")
-        print(f"  Python Version: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}")
+        print(
+            f"  Python Version: {sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        )
         print(f"  OS: {os.name}")
         print(f"  Requests Version: {requests.__version__}")
         print(f"  Session Headers: {len(self.http.get_headers())}")
@@ -956,21 +1085,50 @@ class Menu:
 
     def main(self):
         handlers = {
-            '1': self.run_get, '2': self.run_post, '3': self.run_put,
-            '4': self.run_delete, '5': self.run_patch, '6': self.run_head,
-            '7': self.run_options, '8': self.run_download, '9': self.run_upload,
-            '10': self.run_batch, '11': self.run_parallel, '12': self.run_status,
-            '13': self.run_size, '14': self.run_content_type, '15': self.run_server,
-            '16': self.run_last_modified, '17': self.run_ip, '18': self.run_redirects,
-            '19': self.run_set_cookie, '20': self.run_clear_cookies, '21': self.run_view_headers,
-            '22': self.run_set_header, '23': self.run_remove_header, '24': self.run_set_timeout,
-            '25': self.run_set_proxy, '26': self.run_remove_proxy, '27': self.run_set_auth,
-            '28': self.run_remove_auth, '29': self.run_extract_links, '30': self.run_extract_images,
-            '31': self.run_extract_emails, '32': self.run_md5, '33': self.run_sha256,
-            '34': self.run_b64encode, '35': self.run_b64decode, '36': self.run_urlencode,
-            '37': self.run_urldecode, '38': self.run_spider, '39': self.run_benchmark,
-            '40': self.run_compare, '41': self.run_monitor, '42': self.run_info,
-            '43': self.run_clear, '0': self.exit_app
+            "1": self.run_get,
+            "2": self.run_post,
+            "3": self.run_put,
+            "4": self.run_delete,
+            "5": self.run_patch,
+            "6": self.run_head,
+            "7": self.run_options,
+            "8": self.run_download,
+            "9": self.run_upload,
+            "10": self.run_batch,
+            "11": self.run_parallel,
+            "12": self.run_status,
+            "13": self.run_size,
+            "14": self.run_content_type,
+            "15": self.run_server,
+            "16": self.run_last_modified,
+            "17": self.run_ip,
+            "18": self.run_redirects,
+            "19": self.run_set_cookie,
+            "20": self.run_clear_cookies,
+            "21": self.run_view_headers,
+            "22": self.run_set_header,
+            "23": self.run_remove_header,
+            "24": self.run_set_timeout,
+            "25": self.run_set_proxy,
+            "26": self.run_remove_proxy,
+            "27": self.run_set_auth,
+            "28": self.run_remove_auth,
+            "29": self.run_extract_links,
+            "30": self.run_extract_images,
+            "31": self.run_extract_emails,
+            "32": self.run_md5,
+            "33": self.run_sha256,
+            "34": self.run_b64encode,
+            "35": self.run_b64decode,
+            "36": self.run_urlencode,
+            "37": self.run_urldecode,
+            "38": self.run_spider,
+            "39": self.run_benchmark,
+            "40": self.run_compare,
+            "41": self.run_monitor,
+            "42": self.run_info,
+            "43": self.run_clear,
+            "0": self.exit_app,
         }
 
         while self.running:
@@ -983,6 +1141,7 @@ class Menu:
             elif choice:
                 print(f"{Colors.FG.BRIGHT_RED}Invalid choice!{Colors.RESET}")
                 time.sleep(1)
+
 
 if __name__ == "__main__":
     app = Menu()
